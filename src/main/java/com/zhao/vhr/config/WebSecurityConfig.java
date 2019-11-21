@@ -35,22 +35,23 @@ import java.io.PrintWriter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private HrService hrService;
+    HrService hrService;
     @Autowired
-    private CustomMetaDataSource metaDataSource;
+    CustomMetaDataSource metadataSource;
     @Autowired
-    private UrlAccessDecisionManager urlAccessDecisionManager;
+    UrlAccessDecisionManager urlAccessDecisionManager;
     @Autowired
-    private AuthenticationAccessDeniedHandler deniedHandler;
+    AuthenticationAccessDeniedHandler deniedHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(hrService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(hrService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/index.html","/static/**","/login_p","/favicon.ico");
+        web.ignoring().antMatchers("/index.html", "/static/**", "/login_p", "/favicon.ico");
     }
 
     @Override
@@ -59,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setSecurityMetadataSource(metaDataSource);
+                        o.setSecurityMetadataSource(metadataSource);
                         o.setAccessDecisionManager(urlAccessDecisionManager);
                         return o;
                     }
@@ -67,17 +68,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/login_p").loginProcessingUrl("/login")
                 .usernameParameter("username").passwordParameter("password")
-                .failureHandler(new AuthenticationFailureHandler(){
+                .failureHandler(new AuthenticationFailureHandler() {
                     @Override
-                    public void onAuthenticationFailure(HttpServletRequest request,
-                                                        HttpServletResponse response,
-                                                        AuthenticationException e) throws IOException{
-                        response.setContentType("application/json;charset=utf-8");
+                    public void onAuthenticationFailure(HttpServletRequest req,
+                                                        HttpServletResponse resp,
+                                                        AuthenticationException e) throws IOException {
+                        resp.setContentType("application/json;charset=utf-8");
                         RespBean respBean = null;
-                        if(e instanceof BadCredentialsException ||
-                                e instanceof UsernameNotFoundException){
+                        if (e instanceof BadCredentialsException ||
+                                e instanceof UsernameNotFoundException) {
                             respBean = RespBean.error("账户名或者密码输入错误!");
-                        }else if (e instanceof LockedException) {
+                        } else if (e instanceof LockedException) {
                             respBean = RespBean.error("账户被锁定，请联系管理员!");
                         } else if (e instanceof CredentialsExpiredException) {
                             respBean = RespBean.error("密码过期，请联系管理员!");
@@ -88,21 +89,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         } else {
                             respBean = RespBean.error("登录失败!");
                         }
-                        response.setStatus(401);
+                        resp.setStatus(401);
                         ObjectMapper om = new ObjectMapper();
-                        PrintWriter writer = response.getWriter();
-                        writer.write(om.writeValueAsString(respBean));
-                        writer.flush();
-                        writer.close();
+                        PrintWriter out = resp.getWriter();
+                        out.write(om.writeValueAsString(respBean));
+                        out.flush();
+                        out.close();
                     }
                 })
                 .successHandler(new AuthenticationSuccessHandler() {
                     @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        response.setContentType("application/json;charset=utf-8");
+                    public void onAuthenticationSuccess(HttpServletRequest req,
+                                                        HttpServletResponse resp,
+                                                        Authentication auth) throws IOException {
+                        resp.setContentType("application/json;charset=utf-8");
                         RespBean respBean = RespBean.ok("登录成功!", HrUtils.getCurrentHr());
                         ObjectMapper om = new ObjectMapper();
-                        PrintWriter out = response.getWriter();
+                        PrintWriter out = resp.getWriter();
                         out.write(om.writeValueAsString(respBean));
                         out.flush();
                         out.close();

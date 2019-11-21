@@ -1,6 +1,8 @@
 package com.zhao.vhr.mapper;
 
 import com.zhao.vhr.bean.Menu;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
