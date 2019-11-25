@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
-import HelloWorld from '@/components/HelloWorld'
+import Home from '@/components/Home'
 Vue.use(Router)
 
 export default new Router({
@@ -12,9 +12,9 @@ export default new Router({
       component: Login,
       hidden:true
     },{
-      path: '/HelloWorld',
+      path: '/home',
       name: '主页',
-      component: HelloWorld,
+      component: Home,
       hidden: true,
       meta: {
         requireAuth: true

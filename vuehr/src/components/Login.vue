@@ -40,11 +40,11 @@
         this.postRequest('/login',{
           username: this.loginForm.username,
           password: this.loginForm.password
-        }).then(resp=>{
+        }).then(resp=> {
           _this.loading = false;
           if (resp && resp.status == 200){
             var data = resp.data;
-            _this.$store.commit('login',data.obj);
+            _this.$store.commit('login', data.obj);
             var path = _this.$route.query.redirect;
             _this.$router
               .replace({path:path == '/' || path == undefined ? '/home' : path});
