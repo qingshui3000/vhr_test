@@ -12,7 +12,7 @@ import {deleteRequest} from "./utils/api";
 import {putRequest} from "./utils/api";
 import {initMenu} from "./utils/utils";
 import {isNotNullORBlank} from './utils/utils'
-// import 'font-awesome/css/font-awesome.min.css'
+import 'font-awesome/css/font-awesome.min.css'
 
 
 Vue.use(ElementUI)

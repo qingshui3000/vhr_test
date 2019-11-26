@@ -2,11 +2,11 @@
   <div>
     <el-container class="home-container">
       <el-header class="home-header">
-        <span class="home-title">微人事</span>
+        <span class="home-t itle">微人事</span>
         <div style="display: flex;align-items: center;margin-right: 7px;">
-<!--          <el-badge style="margin-right: 30px;" :is-dot="this.$store.state.nfDot">-->
-<!--            <i class="fa fa-bell-o" @click="goChat" style="cursor: pointer;"></i>-->
-<!--          </el-badge>-->
+          <el-badge style="margin-right: 30px;" :is-dot="this.$store.state.nfDot">
+            <i class="fa fa-bell-o" @click="goChat" style="cursor: pointer;"></i>
+          </el-badge>
           <el-dropdown>'
             <span class="el-dropdown-link home_userinfo" style="display: flex; align-items: center">
               {{user.name}}
@@ -43,14 +43,14 @@
           </div>
         </el-aside>
         <el-main>
-<!--          <el-breadcrumb separator-class="el-icon-arrow-right">-->
-<!--            <el-breadcrumb-item :to="{path: '/home'}">首页</el-breadcrumb-item>-->
-<!--            <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>-->
-<!--          </el-breadcrumb>-->
-<!--          <keep-alive>-->
-<!--            <router-view v-if="this.$route.meta.keepAlive"></router-view>-->
-<!--          </keep-alive>-->
-<!--          <router-view v-if="!this.$route.meta.keepAlive"></router-view>-->
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{path: '/home'}">首页</el-breadcrumb-item>
+            <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
+          </el-breadcrumb>
+          <keep-alive>
+            <router-view v-if="this.$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view v-if="!this.$route.meta.keepAlive"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -148,7 +148,7 @@
     padding: 0px;
   }
 
-  .home_title{
+  .home-title{
     color: #fff;
     font-size: 22px;
     display: inline;
@@ -161,7 +161,8 @@
   }
 
   .home_userinfoContainer{
-
+    display: inline;
+    margin-right: 20px;
   }
 
   .el-submenu .el-menu-item{

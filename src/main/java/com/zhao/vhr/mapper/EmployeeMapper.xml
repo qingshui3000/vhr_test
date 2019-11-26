@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhao.vhr.mapper.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.zhao.vhr.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="id_card" property="idCard"/>
+        <result column="wedlock" property="wedlock"/>
+        <result column="nation_id" property="nationId"/>
+        <result column="native_place" property="nativePlace"/>
+        <result column="politic_id" property="politicId"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="department_id" property="departmentId"/>
+        <result column="jobLevel_id" property="jobLevelId"/>
+        <result column="pos_id" property="posId"/>
+        <result column="engage_form" property="engageForm"/>
+        <result column="tiptop_degree" property="tiptopDegree"/>
+        <result column="specialty" property="specialty"/>
+        <result column="school" property="school"/>
+        <result column="begin_date" property="beginDate"/>
+        <result column="work_state" property="workState"/>
+        <result column="work_id" property="workID"/>
+        <result column="contract_term" property="contractTerm"/>
+        <result column="conversion_time" property="conversionTime"/>
+        <result column="not_work_date" property="notWorkDate"/>
+        <result column="begin_contract" property="beginContract"/>
+        <result column="end_contract" property="endContract"/>
+        <result column="work_age" property="workAge"/>
+        <association property="department" javaType="com.zhao.vhr.bean.Department">
+            <id property="id" column="did"/>
+            <result property="name" column="dname"/>
+        </association>
+        <association property="jobLevel" javaType="com.zhao.vhr.bean.JobLevel">
+            <id property="id" column="jlid"/>
+            <result property="name" column="jlname"/>
+            <result property="titleLevel" column="jlTitleLevel"/>
+        </association>
+        <association property="nation" javaType="com.zhao.vhr.bean.Nation">
+            <id property="id" column="nid"/>
+            <result property="name" column="nname"/>
+        </association>
+        <association property="position" javaType="com.zhao.vhr.bean.Position">
+            <id property="id" column="pid"/>
+            <result property="name" column="pname"/>
+        </association>
+        <association property="politicsStatus" javaType="com.zhao.vhr.bean.PoliticsStatus">
+            <id property="id" column="psid"/>
+            <result property="name" column="psname"/>
+        </association>
+        <association property="salary" javaType="com.zhao.vhr.bean.Salary">
+            <id column="sid" javaType="Integer" property="id"/>
+            <result column="bonus" jdbcType="INTEGER" property="bonus" />
+            <result column="lunchSalary" jdbcType="INTEGER" property="lunchSalary" />
+            <result column="trafficSalary" jdbcType="INTEGER" property="trafficSalary" />
+            <result column="basicSalary" jdbcType="INTEGER" property="basicSalary" />
+            <result column="allSalary" jdbcType="INTEGER" property="allSalary" />
+            <result column="pensionBase" jdbcType="INTEGER" property="pensionBase" />
+            <result column="pensionPer" jdbcType="REAL" property="pensionPer" />
+            <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+            <result column="medicalBase" jdbcType="INTEGER" property="medicalBase" />
+            <result column="medicalPer" jdbcType="REAL" property="medicalPer" />
+            <result column="accumulationFundBase" jdbcType="INTEGER" property="accumulationFundBase" />
+            <result column="accumulationFundPer" jdbcType="REAL" property="accumulationFundPer" />
+            <result column="sname" jdbcType="VARCHAR" property="name" />
+        </association>
+    </resultMap>
+    
+    <select id="getEmpByPage" resultMap="BaseResultMap">
+        select e.*,jl.`id` as jlid,jl.`name` as jlname,jl.`title_level` as jlTitleLevel,d.`id` as did,d.`name` as
+        dname,n.`id` as nid,n.`name` as nname,p.`id` as pid,p.`name` as pname,ps.`id` as psid,ps.`name` as psname from
+        employee e,joblevel jl,department d,nation n,position p,politicsstatus ps where e.`pos_id`=p.`id` and
+        e.`job_level_id`=jl.`id` and e.`department_id`=d.`id` and e.`nation_id`=n.`id` and e.`politic_id`=ps.`id` and e.`name`
+        like concat('%',#{keywords},'%')
+        <if test="engageForm!=null and engageForm!=''">
+            AND e.engageForm=#{engageForm}
+        </if>
+        <if test="politicId!=null and politicId!=''">
+            AND e.politicId=#{politicId}
+        </if>
+        <if test="nationId!=null and nationId!=''">
+            AND e.nationId=#{nationId}
+        </if>
+        <if test="posId!=null and posId!=''">
+            AND e.posId=#{posId}
+        </if>
+        <if test="jobLevelId!=null and jobLevelId!=''">
+            AND e.jobLevelId=#{jobLevelId}
+        </if>
+        <if test="departmentId!=null and departmentId!=''">
+            AND e.departmentId=#{departmentId}
+        </if>
+        <if test="startBeginDate!=null and endBeginDate!=null">
+            AND e.beginDate BETWEEN #{startBeginDate} AND #{endBeginDate}
+        </if>
+        <if test="start!=null and size!=null">
+            order by e.id limit #{start},#{size}
+        </if>
+    </select>
+    <select id="getCountByKeywords" resultType="java.lang.Long">
+        SELECT count(*) FROM employee e WHERE e.name LIKE concat('%',#{keywords},'%')
+        <if test="engageForm!=null and engageForm!=''">
+            AND e.engage_form=#{engageForm}
+        </if>
+        <if test="politicId!=null and politicId!=''">
+            AND e.politic_id=#{politicId}
+        </if>
+        <if test="nationId!=null and nationId!=''">
+            AND e.nation_id=#{nationId}
+        </if>
+        <if test="posId!=null and posId!=''">
+            AND e.pos_id=#{posId}
+        </if>
+        <if test="jobLevelId!=null and jobLevelId!=''">
+            AND e.job_level_id=#{jobLevelId}
+        </if>
+        <if test="departmentId!=null and departmentId!=''">
+            AND e.department_id=#{departmentId}
+        </if>
+        <if test="startBeginDate!=null and endBeginDate!=null">
+            AND e.begin_date BETWEEN #{startBeginDate} AND #{endBeginDate}
+        </if>
+    </select>
+</mapper>
